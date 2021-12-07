@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useState, useContext, useEffect } from 'react'
+import SetupForm from './SetupForm'
 
 const table = {
   sports: 21,
@@ -21,13 +22,19 @@ const AppProvider = ({ children }) => {
   const [correct, setCorrect] = useState(0)
   const [error, setError] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState()
-
+  const [quiz, setQuiz] = useState({
+    amount: 10,
+    category: 'sports',
+    difficulty: 'easy'
+  })
   const fetchQuestions = async (url) => {
     setLoading(true);
     setWaiting(false);
-    const response = await axios(url).catch(err => console.log(err))
+    const response = await axios(url).catch((err) => console.log(err))
     if (response) {
       const data = response.data.results
+      console.log(url)
+      console.log(data)
       if (data.length > 0) {
         setQuestions(data)
         setLoading(false)
@@ -70,11 +77,19 @@ const AppProvider = ({ children }) => {
     setIsModalOpen(false)
   }
 
+  const handleChange = (e) => {
+    const name = e.target.name
+    const value = e.target.value
+    setQuiz({ ...quiz, [name]: value })
+  }
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { amount, category, difficulty } = quiz;
 
-  useEffect(() => {
-    fetchQuestions(tempUrl)
-  }, [])
+    const url = `${API_ENDPOINT}amount=${amount}&difficulty=${difficulty}&category=${table[category]}&type=multiple}`
+    fetchQuestions(url)
+  }
 
   return <AppContext.Provider value={{
     waiting,
@@ -87,6 +102,9 @@ const AppProvider = ({ children }) => {
     nextQuestion,
     checkAnswer,
     closeModal,
+    handleChange,
+    handleSubmit,
+    quiz,
   }}>{children}</AppContext.Provider>
 }
 // make sure use
