@@ -21,19 +21,21 @@ const AppProvider = ({ children }) => {
   const [index, setIndex] = useState(0);
   const [correct, setCorrect] = useState(0)
   const [error, setError] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState()
   const [quiz, setQuiz] = useState({
     amount: 10,
     category: 'sports',
     difficulty: 'easy'
   })
+
+  const [isModalOpen, setIsModalOpen] = useState()
+
   const fetchQuestions = async (url) => {
     setLoading(true);
     setWaiting(false);
+    console.log(url)
     const response = await axios(url).catch((err) => console.log(err))
     if (response) {
-      const data = response.data.results
-      console.log(url)
+      const data = response.data
       console.log(data)
       if (data.length > 0) {
         setQuestions(data)
@@ -87,7 +89,7 @@ const AppProvider = ({ children }) => {
     e.preventDefault();
     const { amount, category, difficulty } = quiz;
 
-    const url = `${API_ENDPOINT}amount=${amount}&difficulty=${difficulty}&category=${table[category]}&type=multiple}`
+    const url = `${API_ENDPOINT}amount=${amount}&category=${table[category]}&difficulty=${difficulty}&type=multiple}`
     fetchQuestions(url)
   }
 

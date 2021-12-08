@@ -52,7 +52,7 @@ const SetupForm = () => {
         {error && <p className='error'>
           can't generate questions, please try different options
         </p>}
-        <button className="submit" onClick={handleSubmit} className='submit-btn'>Start</button>
+        <button type="submit" onClick={handleSubmit} className='submit-btn'>Start</button>
       </form>
     </section>
   </main>
